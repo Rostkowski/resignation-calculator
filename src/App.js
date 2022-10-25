@@ -21,7 +21,7 @@ function App() {
             <CustomerDataForm resignationDetails={resignationDetailsHandler} />
           </Container>
           <div className="col-12 col-md-7 mt-2 mt-md-0 ms-md-1">
-            {resignationDetails.resignationDate && (
+            {resignationDetails.lessonDatesArray?.length > 0 && (
               <Container className="p-1">
                 <ResignationTemplate
                   resignationDetails={resignationDetails}
