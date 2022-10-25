@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Textarea from "../../UI/Textarea/Textarea";
 
 const CustomerDataForm = (props) => {
-  const [resignationDate, setResignationDate] = useState("");
+  const [resignationDate, setResignationDate] = useState(null);
   const [registrationAPILink, setRegistrationAPILink] = useState(null);
   const [timetableAPILink, setTimetableAPILink] = useState(null);
   const [registrationDataObject, setRegistrationDataObject] = useState("");
@@ -15,6 +15,20 @@ const CustomerDataForm = (props) => {
     timetableId: 0,
   });
   const [lessonDatesArray, setLessonDatesArray] = useState([]);
+
+  useEffect(() => {
+    props.resignationDetails({
+      resignationDate: resignationDate,
+      paymentDetails: paymentDetails,
+      lessonDatesArray: lessonDatesArray,
+    });
+  }, [
+    resignationDate,
+    registrationDataObject,
+    timetableDataObject,
+    paymentDetails,
+    lessonDatesArray,
+  ]);
 
   const registrationIdChangeHandler = (event) => {
     setRegistrationAPILink(
@@ -35,9 +49,10 @@ const CustomerDataForm = (props) => {
       const { installments, payments, selectedTimetableId } = JSON.parse(
         event.target.value
       );
+      console.log(installments.map((installment) => {return installment.installmentAmount}))
       setPaymentDetails({
-        installments: installments,
-        payments: payments,
+        installments: installments.map((installment) => {return installment.installmentAmount}),
+        payments: payments.map((payment) => {return payment.paymentAmount}),
         timetableId: selectedTimetableId,
       });
       setTimetableAPILink(
@@ -54,20 +69,21 @@ const CustomerDataForm = (props) => {
       const lessonDates = JSON.parse(event.target.value).timetables[0]
         .timetablesInLoc[0].lessonsDates;
       setLessonDatesArray(lessonDates);
+      console.log(lessonDates);
     } catch (error) {
       console.log("Niepoprawnie skopiowana treść strony." + error);
     }
   };
- 
+
   const resignationDateChangeHandler = (event) => {
     setResignationDate(event.target.value);
-    console.log(event.target.value)
+    console.log(event.target.value);
   };
 
   return (
     <>
       <form>
-        <div className="px-2">
+        <div>
           <Input
             id="resignationDate"
             type="date"
@@ -106,10 +122,9 @@ const CustomerDataForm = (props) => {
               ></Textarea>
               <Textarea
                 id="registrationObject"
-                labelText="Wklej skopiowaną zawartość strony tutaj i naciśnij przycisk dalej aby otrzymać rozliczoną rezygnację."
+                labelText="Wklej skopiowaną zawartość strony tutaj aby otrzymać rozliczoną rezygnację."
                 onChange={timeteableDataObjectHandler}
               ></Textarea>
-              <Button>Dalej</Button>
             </>
           )}
         </div>
