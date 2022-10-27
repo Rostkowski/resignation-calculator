@@ -9,7 +9,7 @@ const ResignationTemplate = (props) => {
 
   const formatLessonDate = (lesson) => {
     const splitDates = lesson.split(".");
-    const dateObject = new Date(splitDates[2], splitDates[1], splitDates[0]);
+    const dateObject = new Date(splitDates[2], splitDates[1] - 1, splitDates[0]);
     return dateObject;
   };
 
